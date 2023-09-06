@@ -14,7 +14,7 @@ import br.com.arboretto.model.Usuario;
 
 import br.com.arboretto.repository.jdbc.UsuarioRepositoryJdbc;
 
-import br.com.arboretto.validations.CPF;
+
 import br.com.arboretto.validations.Numero;
 
 
@@ -41,10 +41,9 @@ public class UsuarioService {
             throw new RegraNegocioException("A Senha execede ao limite permitido.");
         }
 		
-		if (StringUtils.isNotBlank(usuario.getCpf()) && (usuario.getCpf().length() == 11)
-                && !CPF.isCPF(usuario.getCpf())) {
-            throw new RegraNegocioException("O CPF é inválido.");
-        }
+		 if (!validarCPF(usuario.getCpf())) {
+	            throw new RegraNegocioException("O CPF é inválido.");
+	        }
 		
 		if (StringUtils.isBlank(usuario.getEmail())) {
             throw new RegraNegocioException("Email deve ser informado.");
@@ -98,10 +97,9 @@ public class UsuarioService {
             throw new RegraNegocioException("A Senha execede ao limite permitido.");
         }
 		
-		if (StringUtils.isNotBlank(usuario.getCpf()) && (usuario.getCpf().length() == 11)
-                && !CPF.isCPF(usuario.getCpf())) {
-            throw new RegraNegocioException("O CPF é inválido.");
-        }
+		 if (!validarCPF(usuario.getCpf())) {
+	            throw new RegraNegocioException("O CPF é inválido.");
+	        }
 		
 		if (StringUtils.isBlank(usuario.getEmail())) {
             throw new RegraNegocioException("Email deve ser informado.");
@@ -179,5 +177,51 @@ public class UsuarioService {
 		return usuarioRepositoryJdbc.listarUsuario();
 		
 	}
+	
+	private boolean validarCPF(String cpf) {
+	    // Remove caracteres não numéricos do CPF
+	    cpf = cpf.replaceAll("[^0-9]", "");
+
+	    // Verifica se o CPF possui 11 dígitos
+	    if (cpf.length() != 11) {
+	        return false;
+	    }
+
+	    // Verifica se todos os dígitos são iguais (caso especial que não é válido)
+	    boolean digitosIguais = true;
+	    for (int i = 1; i < cpf.length(); i++) {
+	        if (cpf.charAt(i) != cpf.charAt(0)) {
+	            digitosIguais = false;
+	            break;
+	        }
+	    }
+	    if (digitosIguais) {
+	        return false;
+	    }
+
+	    // Calcula o primeiro dígito verificador
+	    int soma = 0;
+	    for (int i = 0; i < 9; i++) {
+	        soma += (cpf.charAt(i) - '0') * (10 - i);
+	    }
+	    int primeiroDigito = 11 - (soma % 11);
+	    if (primeiroDigito >= 10) {
+	        primeiroDigito = 0;
+	    }
+
+	    // Calcula o segundo dígito verificador
+	    soma = 0;
+	    for (int i = 0; i < 10; i++) {
+	        soma += (cpf.charAt(i) - '0') * (11 - i);
+	    }
+	    int segundoDigito = 11 - (soma % 11);
+	    if (segundoDigito >= 10) {
+	        segundoDigito = 0;
+	    }
+
+	    // Verifica se os dígitos calculados batem com os dígitos informados
+	    return (cpf.charAt(9) - '0' == primeiroDigito) && (cpf.charAt(10) - '0' == segundoDigito);
+	}
+
 	
 }

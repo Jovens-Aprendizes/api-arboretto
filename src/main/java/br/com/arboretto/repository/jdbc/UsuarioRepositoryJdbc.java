@@ -42,12 +42,10 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository {
 			query.append("numero_apartamento, ");
 			query.append("bloco, ");
 			query.append("cargo, ");
-			query.append("data_marcada, ");
 			query.append("data_nascimento ) ");
 
 			query.append("values ");
 			query.append("(?, ");
-			query.append("?, ");
 			query.append("?, ");
 			query.append("?, ");
 			query.append("?, ");
@@ -72,8 +70,7 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository {
 					ps.setString(5, usuario.getNumeroApartamento());
 					ps.setString(6, usuario.getBloco());
 					ps.setString(7, usuario.getCargo());
-					ps.setString(8, usuario.getDataMarcada());
-					ps.setString(9, usuario.getDataNascimento());
+					ps.setString(8, usuario.getDataNascimento());
 
 					return ps;
 				}
@@ -104,7 +101,6 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository {
 			query.append("usu.numero_apartamento, ");
 			query.append("usu.bloco, ");
 			query.append("usu.cargo, ");
-			query.append("usu.data_marcada, ");
 			query.append("usu.data_nascimento  ");
 
 			query.append("from ");
@@ -135,20 +131,20 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository {
 
 			query.append("set ");
 
-			query.append("nome = ?, ");
+			query.append("nome = ?, ");	
 			query.append("senha = ?, ");
+			query.append("cpf = ?, ");
 			query.append("email = ?, ");
 			query.append("numero_apartamento = ?, ");
 			query.append("bloco = ?, ");
-			query.append("data_marcada = ?, ");
 			query.append("data_nascimento = ? ");
 
 			query.append("where ");
 			query.append("id = ? ");
 			
 			
-			return jdbcTemplate.update(query.toString(), usuario.getNome(), usuario.getSenha(), usuario.getEmail(),
-					usuario.getNumeroApartamento(), usuario.getBloco(), usuario.getDataMarcada(),
+			return jdbcTemplate.update(query.toString(), usuario.getNome(), usuario.getSenha(),usuario.getCpf(), usuario.getEmail(),
+					usuario.getNumeroApartamento(), usuario.getBloco(),
 					usuario.getDataNascimento(), usuario.getId());
 
 			
@@ -199,7 +195,7 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository {
 			query.append("usu.numero_apartamento, ");
 			query.append("usu.bloco, ");
 			query.append("usu.cargo, ");
-			query.append("usu.data_marcada, ");
+			
 			query.append("usu.data_nascimento  ");
 
 			query.append("from ");
@@ -211,7 +207,7 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository {
 		} catch (EmptyResultDataAccessException emptyResultDataAccessException) {
 			return null;
 		} catch (Exception exception) {
-			throw new ErroInternoServidorException("Erro ao tentar pesquisar Usuario por id.");
+			throw new ErroInternoServidorException("Erro ao tentar listar usuario.");
 		}
 	}
 
