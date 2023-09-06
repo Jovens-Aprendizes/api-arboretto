@@ -8,8 +8,7 @@ public class Usuario {
 	private String email;
 	private String numeroApartamento;
 	private String bloco;
-	private String cargo;
-	private String dataMarcada; 	
+	private String cargo;	
 	private String dataNascimento;
 	
 	public String getDataNascimento() {
@@ -88,12 +87,5 @@ public class Usuario {
 		this.cargo = cargo;
 	}
 
-	public String getDataMarcada() {
-		return dataMarcada;
-	}
-
-	public void setDataMarcada(String dataMarcada) {
-		this.dataMarcada = dataMarcada;
-	}
 	
 }
