@@ -68,7 +68,7 @@ public class UsuarioService {
         if (usuario.getBloco().length()>2) {
             throw new RegraNegocioException("o Número do bloco deve conter 2 caracteres.");
         }
-        String cargo="Usuário";
+        String cargo="usuário";
         usuario.setCargo(cargo);
         
         if (StringUtils.isBlank(usuario.getDataNascimento())) {

@@ -35,6 +35,7 @@ public class UsuarioSpaceResource {
 	@Autowired
 	private UsuarioSpaceService usuarioSpaceService;
 
+	
 	@RequestMapping(value = "/salvar", method = RequestMethod.POST)
 	public ResponseEntity<UsuarioSpace> salvar(@RequestHeader(required = false) Map<String, String> headers,
 			@RequestBody UsuarioSpace usuarioSpace) {

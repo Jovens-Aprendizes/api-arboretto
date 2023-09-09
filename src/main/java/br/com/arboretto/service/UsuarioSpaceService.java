@@ -26,6 +26,10 @@ public class UsuarioSpaceService {
 		if (StringUtils.isBlank(usuarioSpace.getSpaceId())) {
 			throw new RegraNegocioException("O espaço desejado deve ser selecionado");
 		}
+		
+		if (StringUtils.isBlank(usuarioSpace.getDataMarcada())) {
+			 throw new RegraNegocioException("Selecione uma data para marcar");
+		}  
 
 		if (usuarioSpace.getObservacao().length() > 100) {
 			throw new RegraNegocioException("A Observação execede ao limite permitido.");
