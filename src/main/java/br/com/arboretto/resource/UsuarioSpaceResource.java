@@ -29,12 +29,13 @@ import br.com.arboretto.service.UsuarioSpaceService;
 
 @RestController
 @RequestMapping("/api-arboretto-dev/v1/usuario-space")
-@CrossOrigin(origins = "", allowedHeaders = "")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UsuarioSpaceResource {
 
 	@Autowired
 	private UsuarioSpaceService usuarioSpaceService;
 
+	
 	@RequestMapping(value = "/salvar", method = RequestMethod.POST)
 	public ResponseEntity<UsuarioSpace> salvar(@RequestHeader(required = false) Map<String, String> headers,
 			@RequestBody UsuarioSpace usuarioSpace) {

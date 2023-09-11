@@ -27,15 +27,17 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.arboretto.model.Usuario;
 
 import br.com.arboretto.service.UsuarioService;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api-arboretto-dev/v1/usuario")
-@CrossOrigin(origins = "", allowedHeaders = "")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UsuarioResource {
 	
 	@Autowired
     private UsuarioService usuarioService;
 	
+	@ApiOperation("Salvar um Usuario")
 	@RequestMapping(value = "/salvar", method = RequestMethod.POST)
     public ResponseEntity<Usuario> salvar(@RequestHeader(required = false) Map<String, String> headers,
             @RequestBody Usuario usuario) {
@@ -45,6 +47,7 @@ public class UsuarioResource {
                 .body(usuarioService.salvar(usuario));
     }
 	
+	@ApiOperation("Atualizar um Usuario")
 	@RequestMapping(value = "/atualizar", method = RequestMethod.PUT)
 	public ResponseEntity<Usuario> atualizar(@RequestHeader(required = false) Map<String, String> headers,
 			@RequestBody Usuario usuario) {
@@ -53,6 +56,7 @@ public class UsuarioResource {
 		return ResponseEntity.status(HttpStatus.OK).cacheControl(cacheControl).body(usuarioService.atualizar(usuario));
 	}
 	
+	@ApiOperation("Listar Usuarios")
 	@RequestMapping(value = "/listar", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
 	public ResponseEntity<?> ListarUsuario(@RequestHeader(required = false) Map<String, String> headers) {
@@ -63,6 +67,7 @@ public class UsuarioResource {
 		return ResponseEntity.status(HttpStatus.OK).cacheControl(cacheControl).body(usuarioService.listarUsuario());
 	}
 
+	@ApiOperation("Get Usuario por id")
 	@RequestMapping(value = "/filter-id", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
 	public ResponseEntity<?> getPorId(@RequestHeader(required = false) String token,
@@ -73,6 +78,7 @@ public class UsuarioResource {
 
 	}
 	
+	@ApiOperation("Login")
 	@RequestMapping(value = "/login", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
 	public ResponseEntity<?> getLogin(@RequestHeader Map<String, String> headers) {
@@ -85,6 +91,7 @@ public class UsuarioResource {
 				.body(usuarioService.getLogin(cpf, senha));
 	}
 	
+	@ApiOperation("Deletar um usuario")
 	@RequestMapping(value = "/apagar", method = RequestMethod.DELETE, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
 	public ResponseEntity<?> apagar(@RequestHeader Map<String, String> headers, @RequestParam("id") String id) {
