@@ -29,7 +29,7 @@ import br.com.arboretto.service.UsuarioSpaceService;
 
 @RestController
 @RequestMapping("/api-arboretto-dev/v1/usuario-space")
-@CrossOrigin(origins = "", allowedHeaders = "")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UsuarioSpaceResource {
 
 	@Autowired
