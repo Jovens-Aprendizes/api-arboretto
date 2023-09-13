@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/api-arboretto-dev/v1/usuario")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+
 public class UsuarioResource {
 	
 	@Autowired

@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -29,7 +29,7 @@ import br.com.arboretto.service.UsuarioSpaceService;
 
 @RestController
 @RequestMapping("/api-arboretto-dev/v1/usuario-space")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+
 public class UsuarioSpaceResource {
 
 	@Autowired
