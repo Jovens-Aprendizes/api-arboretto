@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.arboretto.exception.RegraNegocioException;
 
@@ -18,6 +19,7 @@ public class UsuarioSpaceService {
 	@Autowired
 	private UsuarioSpaceRepositoryJdbc usuarioSpaceRepositoryJdbc;
 
+	@Transactional
 	public UsuarioSpace salvar(UsuarioSpace usuarioSpace) {
 		if (StringUtils.isBlank(usuarioSpace.getUsuarioId())) {
 			throw new RegraNegocioException("O Usuario deve ser informado");
@@ -26,10 +28,10 @@ public class UsuarioSpaceService {
 		if (StringUtils.isBlank(usuarioSpace.getSpaceId())) {
 			throw new RegraNegocioException("O espaço desejado deve ser selecionado");
 		}
-		
+
 		if (StringUtils.isBlank(usuarioSpace.getDataMarcada())) {
-			 throw new RegraNegocioException("Selecione uma data para marcar");
-		}  
+			throw new RegraNegocioException("Selecione uma data para marcar");
+		}
 
 		if (usuarioSpace.getObservacao().length() > 100) {
 			throw new RegraNegocioException("A Observação execede ao limite permitido.");
@@ -39,6 +41,7 @@ public class UsuarioSpaceService {
 		return usuarioSpaceRepositoryJdbc.getPorId(String.valueOf(l));
 	}
 
+	@Transactional
 	public UsuarioSpace atualizar(UsuarioSpace usuarioSpace) {
 
 		if (StringUtils.isBlank(usuarioSpace.getUsuarioId())) {
@@ -62,11 +65,11 @@ public class UsuarioSpaceService {
 	public void delete(String id) {
 
 		if (StringUtils.isBlank(id)) {
-			throw new RegraNegocioException("O ID do Usuario deve ser informado.");
+			throw new RegraNegocioException("O ID do Espaço deve ser informado.");
 		}
 
 		if (!Numero.isLong(id)) {
-			throw new RegraNegocioException("O ID do Usuario informado é inválido.");
+			throw new RegraNegocioException("O ID do Espaço informado é inválido.");
 		}
 
 		usuarioSpaceRepositoryJdbc.delete(id);
@@ -77,9 +80,9 @@ public class UsuarioSpaceService {
 
 		return usuarioSpaceRepositoryJdbc.getPorId(id);
 	}
-	
-	public List<UsuarioSpace> listarUsuarioSpace(){
-		
+
+	public List<UsuarioSpace> listarUsuarioSpace() {
+
 		return usuarioSpaceRepositoryJdbc.listarUsuarioSpace();
 	}
 

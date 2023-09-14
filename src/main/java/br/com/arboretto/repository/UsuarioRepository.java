@@ -18,4 +18,8 @@ public interface UsuarioRepository {
 	public List<Usuario> listarUsuario();
 	
 	public void delete(String id);
+	
+	public String getSenhaByCpf(String cpf);
+	
+	public void atualizarSenha(String id, String senhaCriptografada);
 }
