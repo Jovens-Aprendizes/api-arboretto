@@ -27,51 +27,33 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 
 	@Override
 	public long salvar(UsuarioSpace usuarioSpace) {
-		try {
+	    try {
+	        String query = "INSERT INTO usuario_space (usuario_id, space_id, data_marcada, observacao) VALUES (?, ?, ?, ?)";
 
-			StringBuilder query = new StringBuilder();
-			query.append("insert into ");
+	        KeyHolder holder = new GeneratedKeyHolder();
 
-			query.append("usuario_space ");
+	        jdbcTemplate.update(new PreparedStatementCreator() {
+	            @Override
+	            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+	                PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-			query.append("(usuario_id, ");
-			query.append("space_id, ");
-			query.append("data_marcada, ");
-			query.append("observacao ");
+	                ps.setString(1, usuarioSpace.getUsuarioId());
+	                ps.setString(2, usuarioSpace.getSpaceId());
+	                ps.setString(3, usuarioSpace.getDataMarcada());
+	                ps.setString(4, usuarioSpace.getObservacao());
 
-			query.append("values ");
-			query.append("(?, ");
-			query.append("?, ");
-			query.append("?, ");
-			query.append("? ) ");
+	                return ps;
+	            }
+	        }, holder);
 
-			KeyHolder holder = new GeneratedKeyHolder();
+	        usuarioSpace.setId(String.valueOf(holder.getKey().longValue()));
 
-			jdbcTemplate.update(new PreparedStatementCreator() {
-
-				@Override
-				public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-					PreparedStatement ps = connection.prepareStatement(query.toString(),
-							Statement.RETURN_GENERATED_KEYS);
-
-					ps.setString(1, usuarioSpace.getUsuarioId());
-					ps.setString(2, usuarioSpace.getSpaceId());
-					ps.setString(3, usuarioSpace.getDataMarcada());
-					ps.setString(4, usuarioSpace.getObservacao());
-				
-					return ps;
-				}
-
-			}, holder);
-
-			usuarioSpace.setId(String.valueOf(holder.getKey().longValue()));
-
-			return holder.getKey().longValue();
-
-		} catch (Exception e) {
-			throw new ErroInternoServidorException("Erro ao tentar salvar usuário.");
-		}
+	        return holder.getKey().longValue();
+	    } catch (Exception e) {
+	        throw new ErroInternoServidorException("Erro ao tentar salvar Espaço.");
+	    }
 	}
+
 
 	@Override
 	public UsuarioSpace getPorId(String id) {
@@ -90,16 +72,18 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 
 			query.append("where ");
 
-			query.append("usu.id = ?");
+			query.append("usp.id = ?");
 
 			return jdbcTemplate.queryForObject(query.toString(), new BeanPropertyRowMapper<UsuarioSpace>(UsuarioSpace.class), id);
 
 		} catch (EmptyResultDataAccessException emptyResultDataAccessException) {
 			return null;
 		} catch (Exception exception) {
-			throw new ErroInternoServidorException("Erro ao tentar pesquisar Usuario por id.");
+			throw new ErroInternoServidorException("Erro ao tentar pesquisar Espaço marcado por id.");
 		}
 	}
+	
+
 
 	@Override
 	public int atualizar(UsuarioSpace usuarioSpace) {
@@ -115,7 +99,7 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 			query.append("usuario_id = ?, ");
 			query.append("space_id = ?, ");
 			query.append("data_marcada = ?, ");
-			query.append("observacao = ?, ");
+			query.append("observacao = ? ");
 	
 
 			query.append("where ");
@@ -128,7 +112,7 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 			
 
 		} catch (Exception e) {
-			throw new ErroInternoServidorException("Erro ao tentar atualizar dados do usuário");
+			throw new ErroInternoServidorException("Erro ao tentar atualizar dados do espaço marcado");
 		}
 	}
 

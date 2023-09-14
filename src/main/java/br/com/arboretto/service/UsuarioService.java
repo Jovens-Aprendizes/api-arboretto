@@ -5,9 +5,11 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.com.arboretto.exception.ErroInternoServidorException;
 import br.com.arboretto.exception.RegraNegocioException;
 
 import br.com.arboretto.model.Usuario;
@@ -24,6 +26,9 @@ public class UsuarioService {
 	@Autowired
 	private UsuarioRepositoryJdbc usuarioRepositoryJdbc; 
 	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
 	public Usuario salvar(Usuario usuario) {
 		if (StringUtils.isBlank(usuario.getNome())) {
             throw new RegraNegocioException("O Usuario deve ser informado");
@@ -32,6 +37,10 @@ public class UsuarioService {
 		if (StringUtils.isBlank(usuario.getSenha())) {
             throw new RegraNegocioException("A Senha deve ser informada");
         }
+		
+		 String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
+	        usuario.setSenha(senhaCriptografada);
+		
 		
 		if (usuario.getNome().length() > 120) {
             throw new RegraNegocioException("O Nome execede ao limite permitido.");
@@ -97,6 +106,10 @@ public class UsuarioService {
             throw new RegraNegocioException("A Senha execede ao limite permitido.");
         }
 		
+		if (usuario.getSenha().length() < 8) {
+            throw new RegraNegocioException("O minimo para cadastrar a Senha é de 8 Digitos.");
+        }
+		
 		 if (!validarCPF(usuario.getCpf())) {
 	            throw new RegraNegocioException("O CPF é inválido.");
 	        }
@@ -137,21 +150,42 @@ public class UsuarioService {
 		
 	}
 	
+	public void atualizarSenha(String id, String novaSenha) {
+		if (novaSenha.length() > 120) {
+            throw new RegraNegocioException("A Senha execede ao limite permitido.");
+        }
+		
+		if (novaSenha.length() < 8) {
+            throw new RegraNegocioException("O minimo para cadastrar a Senha é de 8 Digitos.");
+        }
+
+        // Criptografe a nova senha
+        String senhaCriptografada = passwordEncoder.encode(novaSenha);
+
+        // Atualize a senha no banco de dados
+        usuarioRepositoryJdbc.atualizarSenha(id, senhaCriptografada);
+    }
+	
 	public Usuario getLogin(String cpf, String senha) {
+        if (StringUtils.isBlank(cpf) || StringUtils.isBlank(senha)) {
+            throw new RegraNegocioException("Cpf e senha devem ser informados.");
+        }
 
-		if (StringUtils.isBlank(cpf) || StringUtils.isBlank(senha)) {
-			throw new RegraNegocioException("Cpf e senha devem ser informados.");
-		}
+        try {
+            String senhaArmazenada = usuarioRepositoryJdbc.getSenhaByCpf(cpf);
 
-		String id = usuarioRepositoryJdbc.getLogin(cpf, senha);
-
-		if (id == null) {
-			throw new RegraNegocioException("Cpf ou senha não conferem.");
-		}
-
-		return this.getPorId(id);
-
-	}
+            if (senhaArmazenada != null && passwordEncoder.matches(senha, senhaArmazenada)) {
+                String id = usuarioRepositoryJdbc.getLogin(cpf, senha);
+                return this.getPorId(id);
+            } else {
+                throw new RegraNegocioException("Cpf ou senha não conferem.");
+            }
+        } catch (EmptyResultDataAccessException emptyResultDataAccessException) {
+            throw new RegraNegocioException("Cpf ou senha não conferem.");
+        } catch (Exception exception) {
+            throw new ErroInternoServidorException("Erro ao tentar autenticar usuário.");
+        }
+    }
 	
 	public void delete(String id) {
 

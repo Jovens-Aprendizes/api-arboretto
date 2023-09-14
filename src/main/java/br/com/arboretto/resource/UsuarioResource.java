@@ -54,6 +54,18 @@ public class UsuarioResource {
 		return ResponseEntity.status(HttpStatus.OK).cacheControl(cacheControl).body(usuarioService.atualizar(usuario));
 	}
 	
+	@ApiOperation("Atualizar a Senha")
+	@RequestMapping(value = "/atualizar-senha", method = RequestMethod.PUT)
+	public ResponseEntity<Void> atualizarSenha(@RequestHeader(required = false) Map<String, String> headers,
+	        @RequestParam(name = "id") String id, @RequestParam(name = "novaSenha") String novaSenha) {
+
+	    usuarioService.atualizarSenha(id, novaSenha);
+
+	    CacheControl cacheControl = CacheControl.maxAge(30, TimeUnit.SECONDS);
+	    return ResponseEntity.noContent().cacheControl(cacheControl).build();
+	}
+	
+	
 	@ApiOperation("Listar Usuarios")
 	@RequestMapping(value = "/listar", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
