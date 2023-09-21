@@ -38,6 +38,10 @@ public class UsuarioService {
             throw new RegraNegocioException("A Senha deve ser informada");
         }
 		
+		if (usuario.getSenha().length() < 120) {
+            throw new RegraNegocioException("A Senha requer um minimo de 8 caracteres.");
+        }
+		
 		 String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
 	        usuario.setSenha(senhaCriptografada);
 		
