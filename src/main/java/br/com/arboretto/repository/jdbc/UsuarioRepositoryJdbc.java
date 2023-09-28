@@ -37,7 +37,7 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository {
 			StringBuilder query = new StringBuilder();
 			query.append("insert into ");
 
-			query.append("USUARIO ");
+			query.append("usuario ");
 
 			query.append("(nome, ");
 			query.append("senha, ");
@@ -107,7 +107,7 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository {
 			query.append("usu.data_nascimento  ");
 
 			query.append("from ");
-			query.append("USUARIO usu ");
+			query.append("usuario usu ");
 
 			query.append("where ");
 
@@ -146,7 +146,7 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository {
 			StringBuilder query = new StringBuilder();
 
 			query.append("update ");
-			query.append("USUARIO ");
+			query.append("usuario ");
 
 			query.append("set ");
 
@@ -205,7 +205,7 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository {
 			query.append("usu.data_nascimento  ");
 
 			query.append("from ");
-			query.append("USUARIO usu ");
+			query.append("usuario usu ");
 
 			return jdbcTemplate.query(query.toString(), new BeanPropertyRowMapper<Usuario>(Usuario.class));
 
@@ -218,6 +218,6 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository {
 
 	@Override
 	public void delete(String id) {
-		jdbcTemplate.update("delete from USUARIO where id = ?", id);
+		jdbcTemplate.update("delete from usuario where id = ?", id);
 	}
 }

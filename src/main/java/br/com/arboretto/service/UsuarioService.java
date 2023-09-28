@@ -38,7 +38,7 @@ public class UsuarioService {
             throw new RegraNegocioException("A Senha deve ser informada");
         }
 		
-		if (usuario.getSenha().length() < 120) {
+		if (usuario.getSenha().length() < 8) {
             throw new RegraNegocioException("A Senha requer um minimo de 8 caracteres.");
         }
 		
@@ -81,8 +81,12 @@ public class UsuarioService {
         if (usuario.getBloco().length()>2) {
             throw new RegraNegocioException("o Número do bloco deve conter 2 caracteres.");
         }
-        String cargo="usuário";
-        usuario.setCargo(cargo);
+        String cargo = usuario.getCargo();
+
+        // Verificar se o valor de cargo é válido
+        if (!cargo.equals("inquilino") && !cargo.equals("administrador") && !cargo.equals("proprietário")) {
+            throw new RegraNegocioException("Cargo inválido. Use 'inquilino', 'administrador' ou 'proprietário'.");
+        }
         
         if (StringUtils.isBlank(usuario.getDataNascimento())) {
             throw new RegraNegocioException("A data de nascimento deve ser informada.");
