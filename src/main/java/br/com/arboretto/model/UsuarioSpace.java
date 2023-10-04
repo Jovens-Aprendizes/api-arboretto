@@ -7,6 +7,7 @@ public class UsuarioSpace {
 	private String spaceId;
 	private String dataMarcada;
 	private String observacao;
+	private Boolean status;
 	
 	public UsuarioSpace () {
 		
@@ -40,6 +41,12 @@ public class UsuarioSpace {
 	}
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
+	}
+	public Boolean getStatus() {
+		return status;
+	}
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
 
 	
