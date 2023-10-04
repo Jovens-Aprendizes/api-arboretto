@@ -28,7 +28,7 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	@Override
 	public long salvar(UsuarioSpace usuarioSpace) {
 	    try {
-	        String query = "INSERT INTO usuario_space (usuario_id, space_id, data_marcada, observacao) VALUES (?, ?, ?, ?)";
+	        String query = "INSERT INTO usuario_space (usuario_id, space_id, data_marcada, observacao,status) VALUES (?, ?, ?, ?,?)";
 
 	        KeyHolder holder = new GeneratedKeyHolder();
 
@@ -41,6 +41,7 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	                ps.setString(2, usuarioSpace.getSpaceId());
 	                ps.setString(3, usuarioSpace.getDataMarcada());
 	                ps.setString(4, usuarioSpace.getObservacao());
+	                ps.setBoolean(5, usuarioSpace.getStatus());
 
 	                return ps;
 	            }
@@ -65,8 +66,9 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 			query.append("usp.usuario_id, ");
 			query.append("usp.space_id, ");
 			query.append("usp.data_marcada, ");
-			query.append("usp.observacao  ");
-
+			query.append("usp.observacao,  ");
+			query.append("usp.status  ");
+			
 			query.append("from ");
 			query.append("usuario_space usp ");
 
@@ -100,14 +102,14 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 			query.append("space_id = ?, ");
 			query.append("data_marcada = ?, ");
 			query.append("observacao = ? ");
-	
+			query.append("status = ? ");
 
 			query.append("where ");
 			query.append("id = ? ");
 			
 			
 			return jdbcTemplate.update(query.toString(), usuarioSpace.getUsuarioId(), usuarioSpace.getSpaceId(), usuarioSpace.getDataMarcada(),
-					usuarioSpace.getObservacao(), usuarioSpace.getId());
+					usuarioSpace.getObservacao(),usuarioSpace.getStatus(), usuarioSpace.getId());
 
 			
 
@@ -127,6 +129,7 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 			query.append("usp.space_id, ");
 			query.append("usp.data_marcada, ");
 			query.append("usp.observacao  ");
+			query.append("usp.status  ");
 
 			query.append("from ");
 			query.append("usuario_space usp ");
