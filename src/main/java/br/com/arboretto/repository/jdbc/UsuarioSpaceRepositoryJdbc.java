@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,8 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	                ps.setString(2, usuarioSpace.getSpaceId());
 	                ps.setString(3, usuarioSpace.getDataMarcada());
 	                ps.setString(4, usuarioSpace.getObservacao());
-	                ps.setBoolean(5, usuarioSpace.getStatus());
+	                ps.setObject(5, usuarioSpace.getStatus(), Types.BOOLEAN);
+
 
 	                return ps;
 	            }
@@ -128,7 +130,7 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 			query.append("usp.usuario_id, ");
 			query.append("usp.space_id, ");
 			query.append("usp.data_marcada, ");
-			query.append("usp.observacao  ");
+			query.append("usp.observacao,  ");
 			query.append("usp.status  ");
 
 			query.append("from ");

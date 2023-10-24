@@ -33,9 +33,10 @@ public class UsuarioSpaceService {
 			throw new RegraNegocioException("Selecione uma data para marcar");
 		}
 
-		if (usuarioSpace.getObservacao().length() > 100) {
-			throw new RegraNegocioException("A Observação execede ao limite permitido.");
+		if (usuarioSpace.getObservacao() != null && usuarioSpace.getObservacao().length() > 100) {
+		    throw new RegraNegocioException("A Observação excede ao limite permitido.");
 		}
+
 
 		long l = usuarioSpaceRepositoryJdbc.salvar(usuarioSpace);
 		return usuarioSpaceRepositoryJdbc.getPorId(String.valueOf(l));
