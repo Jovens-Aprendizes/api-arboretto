@@ -9,6 +9,7 @@ public class UsuarioSpace {
 	private String observacao;
 	private Boolean status;
 	private String autorizacao;
+	private String nomeUsuario;
 	
 	public UsuarioSpace () {
 		
@@ -54,6 +55,12 @@ public class UsuarioSpace {
 	}
 	public void setAutorizacao(String autorizacao) {
 		this.autorizacao = autorizacao;
+	}
+	public String getNomeUsuario() {
+		return nomeUsuario;
+	}
+	public void setNomeUsuario(String nomeUsuario) {
+		this.nomeUsuario = nomeUsuario;
 	}
 	
 	

@@ -130,19 +130,21 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	public List<UsuarioSpace> listarUsuarioSpace() {
 	    try {
 	        StringBuilder query = new StringBuilder();
-	        query.append("select ");
+	        query.append("SELECT ");
 
 	        query.append("usp.id, ");
-	        query.append("usp.usuario_id, ");
-	        query.append("usp.space_id, ");
-	        query.append("usp.data_marcada, ");
-	        query.append("usp.observacao,  ");
-	        query.append("usp.status  ");
+	        query.append("usp.usuario_id AS usuarioId, "); // Alias para manter o nome 'usuarioId'
+	        query.append("usp.space_id AS spaceId, "); // Alias para manter o nome 'spaceId'
+	        query.append("usp.data_marcada AS dataMarcada, "); // Alias para manter o nome 'dataMarcada'
+	        query.append("usp.observacao AS observacao, "); // Alias para manter o nome 'observacao'
+	        query.append("usp.status AS status, "); // Alias para manter o nome 'status'
+	        query.append("u.nome AS nomeUsuario "); // Renomeando para 'nomeUsuario'
 
-	        query.append("from ");
+	        query.append("FROM ");
 	        query.append("usuario_space usp ");
+	        query.append("JOIN usuario u ON usp.usuario_id = u.id"); 
 
-	        List<UsuarioSpace> usuarioSpaces = jdbcTemplate.query(query.toString(), new BeanPropertyRowMapper<UsuarioSpace>(UsuarioSpace.class));
+	        List<UsuarioSpace> usuarioSpaces = jdbcTemplate.query(query.toString(), new BeanPropertyRowMapper<>(UsuarioSpace.class));
 
 	        for (UsuarioSpace usuarioSpace : usuarioSpaces) {
 	            if (usuarioSpace.getStatus() == null) {
@@ -162,24 +164,27 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	}
 
 
+
 	
 	@Override
 	public List<UsuarioSpace> listarUsuarioSpacePorUsuarioId(String usuarioId) {
 	    try {
 	        StringBuilder query = new StringBuilder();
-	        query.append("select ");
+	        query.append("SELECT ");
 
 	        query.append("usp.id, ");
 	        query.append("usp.usuario_id, ");
 	        query.append("usp.space_id, ");
 	        query.append("usp.data_marcada, ");
-	        query.append("usp.observacao,  ");
-	        query.append("usp.status  ");
+	        query.append("usp.observacao, ");
+	        query.append("usp.status, ");
+	        query.append("u.nome AS nomeUsuario "); // Adicionando o campo de nome do usuário
 
-	        query.append("from ");
+	        query.append("FROM ");
 	        query.append("usuario_space usp ");
+	        query.append("JOIN usuario u ON usp.usuario_id = u.id"); // Junta com a tabela de usuários
 
-	        query.append("where usp.usuario_id = ?");
+	        query.append("WHERE usp.usuario_id = ?");
 
 	        List<UsuarioSpace> usuarioSpaces = jdbcTemplate.query(query.toString(), new Object[]{usuarioId}, new BeanPropertyRowMapper<>(UsuarioSpace.class));
 
@@ -199,6 +204,7 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	        throw new ErroInternoServidorException("Erro ao tentar pesquisar espaços marcados por Usuario id.");
 	    }
 	}
+
 
 
 	@Override
