@@ -8,6 +8,7 @@ public class UsuarioSpace {
 	private String dataMarcada;
 	private String observacao;
 	private Boolean status;
+	private String autorizacao;
 	
 	public UsuarioSpace () {
 		
@@ -48,7 +49,13 @@ public class UsuarioSpace {
 	public void setStatus(Boolean status) {
 		this.status = status;
 	}
-
+	public String getAutorizacao() {
+		return autorizacao;
+	}
+	public void setAutorizacao(String autorizacao) {
+		this.autorizacao = autorizacao;
+	}
+	
 	
 	
 	

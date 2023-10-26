@@ -59,6 +59,14 @@ public class UsuarioSpaceResource {
 		CacheControl cacheControl = CacheControl.maxAge(30, TimeUnit.SECONDS);
 		return ResponseEntity.status(HttpStatus.OK).cacheControl(cacheControl).body(usuarioSpaceService.listarUsuarioSpace());
 	}
+	
+	@RequestMapping(value = "/listar-por-usuario-id", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_XML_VALUE })
+	public ResponseEntity<?> ListarSpacePorUsuarioId(@RequestHeader(required = false) String token,@RequestParam(name = "usuarioId") String usuarioId ) {
+
+		CacheControl cacheControl = CacheControl.maxAge(30, TimeUnit.SECONDS);
+		return ResponseEntity.status(HttpStatus.OK).cacheControl(cacheControl).body(usuarioSpaceService.listarUsuarioSpacePorUsuarioId(usuarioId));
+	}
 
 	@RequestMapping(value = "/filter-id", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })

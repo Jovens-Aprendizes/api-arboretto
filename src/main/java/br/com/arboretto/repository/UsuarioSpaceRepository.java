@@ -17,5 +17,7 @@ public interface UsuarioSpaceRepository {
 	public List<UsuarioSpace> listarUsuarioSpace();
 	
 	public void delete(String id); 
+	
+	public List<UsuarioSpace> listarUsuarioSpacePorUsuarioId(String usuarioId);
 
 }

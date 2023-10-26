@@ -60,92 +60,146 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 
 	@Override
 	public UsuarioSpace getPorId(String id) {
-		try {
-			StringBuilder query = new StringBuilder();
-			query.append("select ");
+	    try {
+	        StringBuilder query = new StringBuilder();
+	        query.append("select ");
 
-			query.append("usp.id, ");
-			query.append("usp.usuario_id, ");
-			query.append("usp.space_id, ");
-			query.append("usp.data_marcada, ");
-			query.append("usp.observacao,  ");
-			query.append("usp.status  ");
-			
-			query.append("from ");
-			query.append("usuario_space usp ");
+	        query.append("usp.id, ");
+	        query.append("usp.usuario_id, ");
+	        query.append("usp.space_id, ");
+	        query.append("usp.data_marcada, ");
+	        query.append("usp.observacao,  ");
+	        query.append("usp.status  ");
 
-			query.append("where ");
+	        query.append("from ");
+	        query.append("usuario_space usp ");
 
-			query.append("usp.id = ?");
+	        query.append("where ");
 
-			return jdbcTemplate.queryForObject(query.toString(), new BeanPropertyRowMapper<UsuarioSpace>(UsuarioSpace.class), id);
+	        query.append("usp.id = ?");
 
-		} catch (EmptyResultDataAccessException emptyResultDataAccessException) {
-			return null;
-		} catch (Exception exception) {
-			throw new ErroInternoServidorException("Erro ao tentar pesquisar Espaço marcado por id.");
-		}
+	        UsuarioSpace usuarioSpace = jdbcTemplate.queryForObject(query.toString(), new BeanPropertyRowMapper<UsuarioSpace>(UsuarioSpace.class), id);
+
+	        if (usuarioSpace.getStatus() == null) {
+	            usuarioSpace.setAutorizacao("pendente");
+	        } else {
+	            usuarioSpace.setAutorizacao(usuarioSpace.getStatus() ? "permitido" : "negado");
+	        }
+
+	        return usuarioSpace;
+
+	    } catch (EmptyResultDataAccessException emptyResultDataAccessException) {
+	        return null;
+	    } catch (Exception exception) {
+	        throw new ErroInternoServidorException("Erro ao tentar pesquisar Espaço marcado por id.");
+	    }
 	}
+
 	
 
 
 	@Override
 	public int atualizar(UsuarioSpace usuarioSpace) {
-		try {
+	    try {
+	        StringBuilder query = new StringBuilder();
 
-			StringBuilder query = new StringBuilder();
+	        query.append("update ");
+	        query.append("usuario_space ");
 
-			query.append("update ");
-			query.append("usuario_space ");
+	        query.append("set ");
 
-			query.append("set ");
+	        query.append("usuario_id = ?, ");
+	        query.append("space_id = ?, ");
+	        query.append("data_marcada = ?, ");
+	        query.append("observacao = ?, ");
+	        query.append("status = ? ");
 
-			query.append("usuario_id = ?, ");
-			query.append("space_id = ?, ");
-			query.append("data_marcada = ?, ");
-			query.append("observacao = ? ");
-			query.append("status = ? ");
+	        query.append("where ");
+	        query.append("id = ? ");
+	        
+	        return jdbcTemplate.update(query.toString(), usuarioSpace.getUsuarioId(), usuarioSpace.getSpaceId(), usuarioSpace.getDataMarcada(),
+	                usuarioSpace.getObservacao(), usuarioSpace.getStatus(), usuarioSpace.getId());
 
-			query.append("where ");
-			query.append("id = ? ");
-			
-			
-			return jdbcTemplate.update(query.toString(), usuarioSpace.getUsuarioId(), usuarioSpace.getSpaceId(), usuarioSpace.getDataMarcada(),
-					usuarioSpace.getObservacao(),usuarioSpace.getStatus(), usuarioSpace.getId());
-
-			
-
-		} catch (Exception e) {
-			throw new ErroInternoServidorException("Erro ao tentar atualizar dados do espaço marcado");
-		}
+	    } catch (Exception e) {
+	        throw new ErroInternoServidorException("Erro ao tentar atualizar dados do espaço marcado");
+	    }
 	}
+
 
 	@Override
 	public List<UsuarioSpace> listarUsuarioSpace() {
-		try {
-			StringBuilder query = new StringBuilder();
-			query.append("select ");
+	    try {
+	        StringBuilder query = new StringBuilder();
+	        query.append("select ");
 
-			query.append("usp.id, ");
-			query.append("usp.usuario_id, ");
-			query.append("usp.space_id, ");
-			query.append("usp.data_marcada, ");
-			query.append("usp.observacao,  ");
-			query.append("usp.status  ");
+	        query.append("usp.id, ");
+	        query.append("usp.usuario_id, ");
+	        query.append("usp.space_id, ");
+	        query.append("usp.data_marcada, ");
+	        query.append("usp.observacao,  ");
+	        query.append("usp.status  ");
 
-			query.append("from ");
-			query.append("usuario_space usp ");
+	        query.append("from ");
+	        query.append("usuario_space usp ");
 
+	        List<UsuarioSpace> usuarioSpaces = jdbcTemplate.query(query.toString(), new BeanPropertyRowMapper<UsuarioSpace>(UsuarioSpace.class));
 
-			return jdbcTemplate.query(query.toString(), new BeanPropertyRowMapper<UsuarioSpace>(UsuarioSpace.class));
+	        for (UsuarioSpace usuarioSpace : usuarioSpaces) {
+	            if (usuarioSpace.getStatus() == null) {
+	                usuarioSpace.setAutorizacao("pendente");
+	            } else {
+	                usuarioSpace.setAutorizacao(usuarioSpace.getStatus() ? "permitido" : "negado");
+	            }
+	        }
 
-		} catch (EmptyResultDataAccessException emptyResultDataAccessException) {
-			return null;
-		} catch (Exception exception) {
-			throw new ErroInternoServidorException("Erro ao tentar pesquisar Usuario por id.");
-		}
+	        return usuarioSpaces;
 
+	    } catch (EmptyResultDataAccessException emptyResultDataAccessException) {
+	        return null;
+	    } catch (Exception exception) {
+	        throw new ErroInternoServidorException("Erro ao tentar pesquisar espaços marcados.");
+	    }
 	}
+
+
+	
+	@Override
+	public List<UsuarioSpace> listarUsuarioSpacePorUsuarioId(String usuarioId) {
+	    try {
+	        StringBuilder query = new StringBuilder();
+	        query.append("select ");
+
+	        query.append("usp.id, ");
+	        query.append("usp.usuario_id, ");
+	        query.append("usp.space_id, ");
+	        query.append("usp.data_marcada, ");
+	        query.append("usp.observacao,  ");
+	        query.append("usp.status  ");
+
+	        query.append("from ");
+	        query.append("usuario_space usp ");
+
+	        query.append("where usp.usuario_id = ?");
+
+	        List<UsuarioSpace> usuarioSpaces = jdbcTemplate.query(query.toString(), new Object[]{usuarioId}, new BeanPropertyRowMapper<>(UsuarioSpace.class));
+
+	        for (UsuarioSpace usuarioSpace : usuarioSpaces) {
+	            if (usuarioSpace.getStatus() == null) {
+	                usuarioSpace.setAutorizacao("pendente");
+	            } else {
+	                usuarioSpace.setAutorizacao(usuarioSpace.getStatus() ? "permitido" : "negado");
+	            }
+	        }
+
+	        return usuarioSpaces;
+
+	    } catch (EmptyResultDataAccessException emptyResultDataAccessException) {
+	        return null;
+	    } catch (Exception exception) {
+	        throw new ErroInternoServidorException("Erro ao tentar pesquisar espaços marcados por Usuario id.");
+	    }
+	}
+
 
 	@Override
 	public void delete(String id) {
