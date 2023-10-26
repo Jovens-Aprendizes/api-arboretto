@@ -138,11 +138,13 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	        query.append("usp.data_marcada AS dataMarcada, "); // Alias para manter o nome 'dataMarcada'
 	        query.append("usp.observacao AS observacao, "); // Alias para manter o nome 'observacao'
 	        query.append("usp.status AS status, "); // Alias para manter o nome 'status'
-	        query.append("u.nome AS nomeUsuario "); // Renomeando para 'nomeUsuario'
+	        query.append("u.nome AS nomeUsuario, "); // Renomeando para 'nomeUsuario'
+	        query.append("s.nome AS nomeSpace "); // Adicionando o campo de nome da space
 
 	        query.append("FROM ");
 	        query.append("usuario_space usp ");
-	        query.append("JOIN usuario u ON usp.usuario_id = u.id"); 
+	        query.append("JOIN usuario u ON usp.usuario_id = u.id ");
+	        query.append("JOIN space s ON usp.space_id = s.id "); // Junta com a tabela de spaces
 
 	        List<UsuarioSpace> usuarioSpaces = jdbcTemplate.query(query.toString(), new BeanPropertyRowMapper<>(UsuarioSpace.class));
 
@@ -165,6 +167,7 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 
 
 
+
 	
 	@Override
 	public List<UsuarioSpace> listarUsuarioSpacePorUsuarioId(String usuarioId) {
@@ -178,11 +181,13 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	        query.append("usp.data_marcada, ");
 	        query.append("usp.observacao, ");
 	        query.append("usp.status, ");
-	        query.append("u.nome AS nomeUsuario "); // Adicionando o campo de nome do usuário
+	        query.append("u.nome AS nomeUsuario, "); // Adicionando o campo de nome do usuário
+	        query.append("s.nome AS nomeSpace "); // Adicionando o campo de nome da space
 
 	        query.append("FROM ");
 	        query.append("usuario_space usp ");
-	        query.append("JOIN usuario u ON usp.usuario_id = u.id"); // Junta com a tabela de usuários
+	        query.append("JOIN usuario u ON usp.usuario_id = u.id ");
+	        query.append("JOIN space s ON usp.space_id = s.id "); // Junta com a tabela de spaces
 
 	        query.append("WHERE usp.usuario_id = ?");
 
@@ -204,6 +209,8 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	        throw new ErroInternoServidorException("Erro ao tentar pesquisar espaços marcados por Usuario id.");
 	    }
 	}
+
+
 
 
 
