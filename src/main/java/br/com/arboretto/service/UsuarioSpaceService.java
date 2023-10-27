@@ -81,6 +81,11 @@ public class UsuarioSpaceService {
 		
 		return usuarioSpaceRepositoryJdbc.listarUsuarioSpacePorUsuarioId(usuarioId);
 	}
+	
+public List<UsuarioSpace> ListarSpacePorId(String spaceId){
+		
+		return usuarioSpaceRepositoryJdbc.listarSpacePorId(spaceId);
+	}
 
 	public void delete(String id) {
 
