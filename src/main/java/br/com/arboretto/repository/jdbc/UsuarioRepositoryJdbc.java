@@ -90,6 +90,38 @@ public class UsuarioRepositoryJdbc implements UsuarioRepository {
 		}
 
 	}
+	
+	@Override
+	public Usuario getPorCpf(String cpf) {
+	    try {
+	        StringBuilder query = new StringBuilder();
+	        query.append("select ");
+
+	        query.append("usu.id, ");
+	        query.append("usu.nome, ");
+	        query.append("usu.cpf, ");
+	        query.append("usu.email, ");
+	        query.append("usu.numero_apartamento, ");
+	        query.append("usu.bloco, ");
+	        query.append("usu.cargo, ");
+	        query.append("usu.data_nascimento  ");
+
+	        query.append("from ");
+	        query.append("usuario usu ");
+
+	        query.append("where ");
+
+	        query.append("usu.cpf = ?");
+
+	        return jdbcTemplate.queryForObject(query.toString(), new BeanPropertyRowMapper<Usuario>(Usuario.class), cpf);
+
+	    } catch (EmptyResultDataAccessException emptyResultDataAccessException) {
+	        return null;
+	    } catch (Exception exception) {
+	        throw new ErroInternoServidorException("Erro ao tentar pesquisar Usuario por CPF.");
+	    }
+	}
+
 
 	@Override
 	public Usuario getPorId(String id) {
