@@ -17,6 +17,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import br.com.arboretto.exception.ErroInternoServidorException;
+import br.com.arboretto.exception.RegraNegocioException;
 import br.com.arboretto.model.UsuarioSpace;
 import br.com.arboretto.repository.UsuarioSpaceRepository;
 
@@ -62,23 +63,25 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	public UsuarioSpace getPorId(String id) {
 	    try {
 	        StringBuilder query = new StringBuilder();
-	        query.append("select ");
+	        query.append("SELECT ");
 
 	        query.append("usp.id, ");
-	        query.append("usp.usuario_id, ");
-	        query.append("usp.space_id, ");
-	        query.append("usp.data_marcada, ");
-	        query.append("usp.observacao,  ");
-	        query.append("usp.status  ");
+	        query.append("usp.usuario_id AS usuarioId, "); // Alias para manter o nome 'usuarioId'
+	        query.append("usp.space_id AS spaceId, "); // Alias para manter o nome 'spaceId'
+	        query.append("usp.data_marcada AS dataMarcada, "); // Alias para manter o nome 'dataMarcada'
+	        query.append("usp.observacao AS observacao, "); // Alias para manter o nome 'observacao'
+	        query.append("usp.status AS status, "); // Alias para manter o nome 'status'
+	        query.append("u.nome AS nomeUsuario, "); // Renomeando para 'nomeUsuario'
+	        query.append("s.nome AS nomeSpace "); // Adicionando o campo de nome da space
 
-	        query.append("from ");
+	        query.append("FROM ");
 	        query.append("usuario_space usp ");
+	        query.append("JOIN usuario u ON usp.usuario_id = u.id ");
+	        query.append("JOIN space s ON usp.space_id = s.id "); // Junta com a tabela de spaces
 
-	        query.append("where ");
+	        query.append("WHERE usp.id = ?");
 
-	        query.append("usp.id = ?");
-
-	        UsuarioSpace usuarioSpace = jdbcTemplate.queryForObject(query.toString(), new BeanPropertyRowMapper<UsuarioSpace>(UsuarioSpace.class), id);
+	        UsuarioSpace usuarioSpace = jdbcTemplate.queryForObject(query.toString(), new BeanPropertyRowMapper<>(UsuarioSpace.class), id);
 
 	        if (usuarioSpace.getStatus() == null) {
 	            usuarioSpace.setAutorizacao("pendente");
@@ -95,11 +98,12 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	    }
 	}
 
+
 	
 
 
 	@Override
-	public int atualizar(UsuarioSpace usuarioSpace) {
+	public UsuarioSpace atualizar(UsuarioSpace usuarioSpace) {
 	    try {
 	        StringBuilder query = new StringBuilder();
 
@@ -116,14 +120,21 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 
 	        query.append("where ");
 	        query.append("id = ? ");
-	        
-	        return jdbcTemplate.update(query.toString(), usuarioSpace.getUsuarioId(), usuarioSpace.getSpaceId(), usuarioSpace.getDataMarcada(),
+
+	        int rowsAffected = jdbcTemplate.update(query.toString(), usuarioSpace.getUsuarioId(), usuarioSpace.getSpaceId(), usuarioSpace.getDataMarcada(),
 	                usuarioSpace.getObservacao(), usuarioSpace.getStatus(), usuarioSpace.getId());
+
+	        if (rowsAffected > 0) {
+	            return getPorId(usuarioSpace.getId());
+	        } else {
+	            throw new RegraNegocioException("Usuário não encontrado");
+	        }
 
 	    } catch (Exception e) {
 	        throw new ErroInternoServidorException("Erro ao tentar atualizar dados do espaço marcado");
 	    }
 	}
+
 
 
 	@Override
