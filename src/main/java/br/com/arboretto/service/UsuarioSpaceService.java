@@ -58,7 +58,8 @@ public class UsuarioSpaceService {
 	            throw new RegraNegocioException("A Observação execede ao limite permitido.");
 	        }
 
-	        usuarioSpaceRepositoryJdbc.atualizar(usuarioSpace);
+	      
+	         usuarioSpaceRepositoryJdbc.atualizar(usuarioSpace);
 
 	        
 	        if (usuarioSpace.getStatus() == null) {
@@ -67,7 +68,7 @@ public class UsuarioSpaceService {
 	            usuarioSpace.setAutorizacao(usuarioSpace.getStatus() ? "permitido" : "negado");
 	        }
 
-	        return usuarioSpace;
+	        return usuarioSpaceRepositoryJdbc.getPorId(usuarioSpace.getUsuarioId());
 
 	    } catch (Exception e) {
 	        throw new ErroInternoServidorException("Erro ao tentar atualizar dados do espaço marcado");
