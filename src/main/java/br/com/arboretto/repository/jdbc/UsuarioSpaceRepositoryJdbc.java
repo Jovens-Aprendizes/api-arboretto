@@ -215,6 +215,46 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	    }
 	}
 
+	@Override
+	public List<UsuarioSpace> listarSpacePorId(String spaceId) {
+	    try {
+	        StringBuilder query = new StringBuilder();
+	        query.append("SELECT ");
+
+	        query.append("usp.id, ");
+	        query.append("usp.usuario_id, ");
+	        query.append("usp.space_id, ");
+	        query.append("usp.data_marcada, ");
+	        query.append("usp.observacao, ");
+	        query.append("usp.status, ");
+	        query.append("u.nome AS nomeUsuario, "); // Adicionando o campo de nome do usuário
+	        query.append("s.nome AS nomeSpace "); // Adicionando o campo de nome da space
+
+	        query.append("FROM ");
+	        query.append("usuario_space usp ");
+	        query.append("JOIN usuario u ON usp.usuario_id = u.id ");
+	        query.append("JOIN space s ON usp.space_id = s.id "); // Junta com a tabela de spaces
+
+	        query.append("WHERE usp.space_id = ?"); // Alterado para buscar pelo space_id
+
+	        List<UsuarioSpace> usuarioSpaces = jdbcTemplate.query(query.toString(), new Object[]{spaceId}, new BeanPropertyRowMapper<>(UsuarioSpace.class));
+
+	        for (UsuarioSpace usuarioSpace : usuarioSpaces) {
+	            if (usuarioSpace.getStatus() == null) {
+	                usuarioSpace.setAutorizacao("pendente");
+	            } else {
+	                usuarioSpace.setAutorizacao(usuarioSpace.getStatus() ? "permitido" : "negado");
+	            }
+	        }
+
+	        return usuarioSpaces;
+
+	    } catch (EmptyResultDataAccessException emptyResultDataAccessException) {
+	        return null;
+	    } catch (Exception exception) {
+	        throw new ErroInternoServidorException("Erro ao tentar pesquisar espaços marcados por Space id.");
+	    }
+	}
 
 
 
