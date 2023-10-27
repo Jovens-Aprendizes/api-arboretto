@@ -22,4 +22,6 @@ public interface UsuarioRepository {
 	public String getSenhaByCpf(String cpf);
 	
 	public void atualizarSenha(String id, String senhaCriptografada);
+	
+	public Usuario getPorCpf(String cpf); 
 }

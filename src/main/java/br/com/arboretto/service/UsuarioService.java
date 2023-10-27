@@ -57,6 +57,12 @@ public class UsuarioService {
 		 if (!validarCPF(usuario.getCpf())) {
 	            throw new RegraNegocioException("O CPF é inválido.");
 	        }
+		 
+		 String cpf = usuario.getCpf();
+		    if (verificarExistenciaCPF(cpf)) {
+		        throw new RegraNegocioException("Este CPF já está cadastrado.");
+		    }
+		 
 		
 		if (StringUtils.isBlank(usuario.getEmail())) {
             throw new RegraNegocioException("Email deve ser informado.");
@@ -264,6 +270,10 @@ public class UsuarioService {
 	    // Verifica se os dígitos calculados batem com os dígitos informados
 	    return (cpf.charAt(9) - '0' == primeiroDigito) && (cpf.charAt(10) - '0' == segundoDigito);
 	}
-
+	
+	private boolean verificarExistenciaCPF(String cpf) {
+	    Usuario usuarioExistente = usuarioRepositoryJdbc.getPorCpf(cpf);
+	    return usuarioExistente != null;
+	}
 	
 }
