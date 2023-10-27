@@ -12,7 +12,7 @@ public interface UsuarioSpaceRepository {
 	
 	public UsuarioSpace getPorId(String id);
 	
-	public UsuarioSpace atualizar(UsuarioSpace usuarioSpace);
+	public int atualizar(UsuarioSpace usuarioSpace);
 	
 	public List<UsuarioSpace> listarUsuarioSpace();
 	

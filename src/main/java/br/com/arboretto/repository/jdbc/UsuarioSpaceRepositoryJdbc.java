@@ -103,7 +103,7 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 
 
 	@Override
-	public UsuarioSpace atualizar(UsuarioSpace usuarioSpace) {
+	public int atualizar(UsuarioSpace usuarioSpace) {
 	    try {
 	        StringBuilder query = new StringBuilder();
 
@@ -120,15 +120,9 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 
 	        query.append("where ");
 	        query.append("id = ? ");
-
-	        int rowsAffected = jdbcTemplate.update(query.toString(), usuarioSpace.getUsuarioId(), usuarioSpace.getSpaceId(), usuarioSpace.getDataMarcada(),
+	        
+	        return jdbcTemplate.update(query.toString(), usuarioSpace.getUsuarioId(), usuarioSpace.getSpaceId(), usuarioSpace.getDataMarcada(),
 	                usuarioSpace.getObservacao(), usuarioSpace.getStatus(), usuarioSpace.getId());
-
-	        if (rowsAffected > 0) {
-	            return getPorId(usuarioSpace.getId());
-	        } else {
-	            throw new RegraNegocioException("Usuário não encontrado");
-	        }
 
 	    } catch (Exception e) {
 	        throw new ErroInternoServidorException("Erro ao tentar atualizar dados do espaço marcado");

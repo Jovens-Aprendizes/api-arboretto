@@ -1,6 +1,7 @@
 package br.com.arboretto.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,13 +47,13 @@ public class UsuarioSpaceService {
 	@Transactional
 	public UsuarioSpace atualizar(UsuarioSpace usuarioSpace) {
 	    try {
-	        if (StringUtils.isBlank(usuarioSpace.getUsuarioId())) {
-	            throw new RegraNegocioException("O Usuario deve ser informado");
+	    	
+	    	
+	    	
+	        if (StringUtils.isBlank(usuarioSpace.getId())) {
+	            throw new RegraNegocioException("O Id da Solicitação deve ser informado");
 	        }
 
-	        if (StringUtils.isBlank(usuarioSpace.getSpaceId())) {
-	            throw new RegraNegocioException("O espaço desejado deve ser selecionado");
-	        }
 
 	        if (usuarioSpace.getObservacao().length() > 100) {
 	            throw new RegraNegocioException("A Observação execede ao limite permitido.");
@@ -77,6 +78,7 @@ public class UsuarioSpaceService {
 
 	
 	public List<UsuarioSpace> listarUsuarioSpacePorUsuarioId(String usuarioId){
+		
 		return usuarioSpaceRepositoryJdbc.listarUsuarioSpacePorUsuarioId(usuarioId);
 	}
 
@@ -95,9 +97,15 @@ public class UsuarioSpaceService {
 	}
 
 	public UsuarioSpace getPorId(String id) {
+	    UsuarioSpace usuarioSpace = usuarioSpaceRepositoryJdbc.getPorId(id);
 
-		return usuarioSpaceRepositoryJdbc.getPorId(id);
+	    if (usuarioSpace == null) {
+	        throw new NoSuchElementException("Não existe solicitação para o ID fornecido: " + id);
+	    }
+
+	    return usuarioSpace;
 	}
+
 
 	public List<UsuarioSpace> listarUsuarioSpace() {
 
