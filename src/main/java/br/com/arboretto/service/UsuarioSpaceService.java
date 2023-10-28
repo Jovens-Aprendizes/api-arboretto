@@ -69,7 +69,7 @@ public class UsuarioSpaceService {
 	            usuarioSpace.setAutorizacao(usuarioSpace.getStatus() ? "permitido" : "negado");
 	        }
 
-	        return usuarioSpaceRepositoryJdbc.getPorId(usuarioSpace.getUsuarioId());
+	        return usuarioSpaceRepositoryJdbc.getPorId(usuarioSpace.getId());
 
 	    } catch (Exception e) {
 	        throw new ErroInternoServidorException("Erro ao tentar atualizar dados do espaço marcado");
