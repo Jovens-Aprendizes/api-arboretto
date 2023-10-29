@@ -33,7 +33,6 @@ public class UsuarioSpaceResource {
 	@Autowired
 	private UsuarioSpaceService usuarioSpaceService;
 
-	
 	@RequestMapping(value = "/salvar", method = RequestMethod.POST)
 	public ResponseEntity<UsuarioSpace> salvar(@RequestHeader(required = false) Map<String, String> headers,
 			@RequestBody UsuarioSpace usuarioSpace) {
@@ -57,23 +56,38 @@ public class UsuarioSpaceResource {
 	public ResponseEntity<?> ListarUsuario(@RequestHeader(required = false) Map<String, String> headers) {
 
 		CacheControl cacheControl = CacheControl.maxAge(30, TimeUnit.SECONDS);
-		return ResponseEntity.status(HttpStatus.OK).cacheControl(cacheControl).body(usuarioSpaceService.listarUsuarioSpace());
+		return ResponseEntity.status(HttpStatus.OK).cacheControl(cacheControl)
+				.body(usuarioSpaceService.listarUsuarioSpace());
 	}
-	
-	@RequestMapping(value = "/listar-por-usuario-id", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
-			MediaType.APPLICATION_XML_VALUE })
-	public ResponseEntity<?> ListarSpacePorUsuarioId(@RequestHeader(required = false) String token,@RequestParam(name = "usuarioId") String usuarioId ) {
+
+	@RequestMapping(value = "/listar-dias-demandados", method = RequestMethod.GET, produces = {
+			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	public ResponseEntity<?> listarDiasDemandados(@RequestHeader(required = false) String token,
+			@RequestParam(name = "mes") int mes, @RequestParam(name = "ano") int ano) {
 
 		CacheControl cacheControl = CacheControl.maxAge(30, TimeUnit.SECONDS);
-		return ResponseEntity.status(HttpStatus.OK).cacheControl(cacheControl).body(usuarioSpaceService.listarUsuarioSpacePorUsuarioId(usuarioId));
+		return ResponseEntity.status(HttpStatus.OK).cacheControl(cacheControl)
+				.body(usuarioSpaceService.obterDiasMaisDemandadosComDiaDaSemana(mes, ano));
 	}
-	
-	@RequestMapping(value = "/listar-por-space-id", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
-			MediaType.APPLICATION_XML_VALUE })
-	public ResponseEntity<?> ListarSpaceId(@RequestHeader(required = false) String token,@RequestParam(name = "spaceId") String spaceId ) {
+
+	@RequestMapping(value = "/listar-por-usuario-id", method = RequestMethod.GET, produces = {
+			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	public ResponseEntity<?> ListarSpacePorUsuarioId(@RequestHeader(required = false) String token,
+			@RequestParam(name = "usuarioId") String usuarioId) {
 
 		CacheControl cacheControl = CacheControl.maxAge(30, TimeUnit.SECONDS);
-		return ResponseEntity.status(HttpStatus.OK).cacheControl(cacheControl).body(usuarioSpaceService.ListarSpacePorId(spaceId));
+		return ResponseEntity.status(HttpStatus.OK).cacheControl(cacheControl)
+				.body(usuarioSpaceService.listarUsuarioSpacePorUsuarioId(usuarioId));
+	}
+
+	@RequestMapping(value = "/listar-por-space-id", method = RequestMethod.GET, produces = {
+			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	public ResponseEntity<?> ListarSpaceId(@RequestHeader(required = false) String token,
+			@RequestParam(name = "spaceId") String spaceId) {
+
+		CacheControl cacheControl = CacheControl.maxAge(30, TimeUnit.SECONDS);
+		return ResponseEntity.status(HttpStatus.OK).cacheControl(cacheControl)
+				.body(usuarioSpaceService.ListarSpacePorId(spaceId));
 	}
 
 	@RequestMapping(value = "/filter-id", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
@@ -85,8 +99,6 @@ public class UsuarioSpaceResource {
 		return ResponseEntity.status(HttpStatus.OK).cacheControl(cacheControl).body(usuarioSpaceService.getPorId(id));
 
 	}
-
-	
 
 	@RequestMapping(value = "/apagar", method = RequestMethod.DELETE, produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
