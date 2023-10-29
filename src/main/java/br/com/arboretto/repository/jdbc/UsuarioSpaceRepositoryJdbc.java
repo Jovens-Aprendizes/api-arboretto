@@ -5,7 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -255,6 +261,48 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	        throw new ErroInternoServidorException("Erro ao tentar pesquisar espaços marcados por Space id.");
 	    }
 	}
+	
+	@Override
+	public List<String> obterDiasMaisDemandadosComDiaDaSemana(int mes, int ano) {
+	    try {
+	        String query = "SELECT DAYOFWEEK(data_marcada) as dia_semana, " +
+	                       "       COUNT(*) as totalReservas, " +
+	                       "       GROUP_CONCAT(DATE_FORMAT(data_marcada, '%Y-%m-%d')) as datasMarcadas " +
+	                       "FROM usuario_space " +
+	                       "WHERE MONTH(data_marcada) = ? AND YEAR(data_marcada) = ? " +
+	                       "GROUP BY dia_semana " +
+	                       "ORDER BY COUNT(*) DESC " +
+	                       "LIMIT 7"; 
+
+	        List<String> diasMaisDemandados = jdbcTemplate.query(query, 
+	            new Object[]{mes, ano},
+	            (rs, rowNum) -> {
+	                int diaDaSemana = rs.getInt("dia_semana");
+	                String nomeDiaDaSemana = obterNomeDiaSemana(diaDaSemana);
+	                int totalReservas = rs.getInt("totalReservas");
+	                String datasMarcadas = rs.getString("datasMarcadas");
+	                return nomeDiaDaSemana + " foi reservado " + totalReservas + " vezes. Datas Marcadas: " + datasMarcadas;
+	            });
+
+	        return diasMaisDemandados;
+	    } catch (Exception e) {
+	        throw new ErroInternoServidorException("Erro ao tentar obter os dias mais demandados.");
+	    }
+	}
+
+	private String obterNomeDiaSemana(int diaDaSemana) {
+	    switch (diaDaSemana) {
+	        case 1: return "Domingo";
+	        case 2: return "Segunda-feira";
+	        case 3: return "Terça-feira";
+	        case 4: return "Quarta-feira";
+	        case 5: return "Quinta-feira";
+	        case 6: return "Sexta-feira";
+	        case 7: return "Sábado";
+	        default: return "Desconhecido";
+	    }
+	}
+
 
 
 

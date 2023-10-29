@@ -110,6 +110,10 @@ public List<UsuarioSpace> ListarSpacePorId(String spaceId){
 
 	    return usuarioSpace;
 	}
+	
+	 public List<String> obterDiasMaisDemandadosComDiaDaSemana(int mes,int ano){
+		 return usuarioSpaceRepositoryJdbc.obterDiasMaisDemandadosComDiaDaSemana(mes,ano);
+	 }
 
 
 	public List<UsuarioSpace> listarUsuarioSpace() {
