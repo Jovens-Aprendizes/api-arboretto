@@ -7,7 +7,7 @@ public class UsuarioSpace {
 	private String spaceId;
 	private String dataMarcada;
 	private String observacao;
-	private Boolean status;
+	private String status;
 	private String autorizacao;
 	private String nomeUsuario;
 	private String nomeSpace;
