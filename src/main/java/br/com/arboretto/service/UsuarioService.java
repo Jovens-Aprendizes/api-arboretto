@@ -93,9 +93,9 @@ public class UsuarioService {
 		 * ); }
 		 */
 
-		if (StringUtils.isBlank(usuario.getDataNascimento())) {
+		/*if (StringUtils.isBlank(usuario.getDataNascimento())) {
 			throw new RegraNegocioException("A data de nascimento deve ser informada.");
-		}
+		}*/
 		long l = usuarioRepositoryJdbc.salvar(usuario);
 		return usuarioRepositoryJdbc.getPorId(String.valueOf(l));
 	}
@@ -165,9 +165,9 @@ public class UsuarioService {
 		 * ); }
 		 */
 
-		if (StringUtils.isBlank(usuario.getDataNascimento())) {
+		/*if (StringUtils.isBlank(usuario.getDataNascimento())) {
 			throw new RegraNegocioException("A data de nascimento deve ser informada.");
-		}
+		}*/
 
 		usuarioRepositoryJdbc.atualizar(usuario);
 
