@@ -49,7 +49,7 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	                ps.setString(2, usuarioSpace.getSpaceId());
 	                ps.setString(3, usuarioSpace.getDataMarcada());
 	                ps.setString(4, usuarioSpace.getObservacao());
-	                ps.setObject(5, usuarioSpace.getStatus(), Types.BOOLEAN);
+	                ps.setString(5, usuarioSpace.getStatus());
 
 
 	                return ps;
