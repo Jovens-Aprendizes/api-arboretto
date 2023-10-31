@@ -63,11 +63,8 @@ public class UsuarioSpaceService {
 	         usuarioSpaceRepositoryJdbc.atualizar(usuarioSpace);
 
 	        
-	        if (usuarioSpace.getStatus() == null) {
-	            usuarioSpace.setAutorizacao("pendente");
-	        } else {
-	            usuarioSpace.setAutorizacao(usuarioSpace.getStatus() ? "permitido" : "negado");
-	        }
+	         usuarioSpace.setAutorizacao("permitido".equals(usuarioSpace.getStatus()) ? "permitido" : "negado");
+
 
 	        return usuarioSpaceRepositoryJdbc.getPorId(usuarioSpace.getId());
 

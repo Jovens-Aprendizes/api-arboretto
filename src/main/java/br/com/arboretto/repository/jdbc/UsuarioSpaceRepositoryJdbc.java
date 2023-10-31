@@ -49,7 +49,7 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	                ps.setString(2, usuarioSpace.getSpaceId());
 	                ps.setString(3, usuarioSpace.getDataMarcada());
 	                ps.setString(4, usuarioSpace.getObservacao());
-	                ps.setObject(5, usuarioSpace.getStatus(), Types.BOOLEAN);
+	                ps.setString(5, usuarioSpace.getStatus());
 
 
 	                return ps;
@@ -89,11 +89,18 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 
 	        UsuarioSpace usuarioSpace = jdbcTemplate.queryForObject(query.toString(), new BeanPropertyRowMapper<>(UsuarioSpace.class), id);
 
-	        if (usuarioSpace.getStatus() == null) {
+	        String status = usuarioSpace.getStatus();
+
+	        if (status == null || status.equals("null")) {
 	            usuarioSpace.setAutorizacao("pendente");
-	        } else {
-	            usuarioSpace.setAutorizacao(usuarioSpace.getStatus() ? "permitido" : "negado");
-	        }
+	        } else if (status.equals("true")) {
+	            usuarioSpace.setAutorizacao("permitido");
+	        } else if (status.equals("false")) {
+	            usuarioSpace.setAutorizacao("negado");
+	        } 
+
+
+
 
 	        return usuarioSpace;
 
@@ -160,11 +167,18 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	        List<UsuarioSpace> usuarioSpaces = jdbcTemplate.query(query.toString(), new BeanPropertyRowMapper<>(UsuarioSpace.class));
 
 	        for (UsuarioSpace usuarioSpace : usuarioSpaces) {
-	            if (usuarioSpace.getStatus() == null) {
-	                usuarioSpace.setAutorizacao("pendente");
-	            } else {
-	                usuarioSpace.setAutorizacao(usuarioSpace.getStatus() ? "permitido" : "negado");
-	            }
+	        	String status = usuarioSpace.getStatus();
+
+	        	if (status == null || status.equals("null")) {
+	        	    usuarioSpace.setAutorizacao("pendente");
+	        	} else if (status.equals("true")) {
+	        	    usuarioSpace.setAutorizacao("permitido");
+	        	} else if (status.equals("false")) {
+	        	    usuarioSpace.setAutorizacao("negado");
+	        	} 
+
+
+
 	        }
 
 	        return usuarioSpaces;
@@ -205,11 +219,17 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	        List<UsuarioSpace> usuarioSpaces = jdbcTemplate.query(query.toString(), new Object[]{usuarioId}, new BeanPropertyRowMapper<>(UsuarioSpace.class));
 
 	        for (UsuarioSpace usuarioSpace : usuarioSpaces) {
-	            if (usuarioSpace.getStatus() == null) {
-	                usuarioSpace.setAutorizacao("pendente");
-	            } else {
-	                usuarioSpace.setAutorizacao(usuarioSpace.getStatus() ? "permitido" : "negado");
-	            }
+	        	String status = usuarioSpace.getStatus();
+
+	        	if (status == null || status.equals("null")) {
+	        	    usuarioSpace.setAutorizacao("pendente");
+	        	} else if (status.equals("true")) {
+	        	    usuarioSpace.setAutorizacao("permitido");
+	        	} else if (status.equals("false")) {
+	        	    usuarioSpace.setAutorizacao("negado");
+	        	} 
+
+
 	        }
 
 	        return usuarioSpaces;
@@ -246,11 +266,18 @@ public class UsuarioSpaceRepositoryJdbc implements UsuarioSpaceRepository {
 	        List<UsuarioSpace> usuarioSpaces = jdbcTemplate.query(query.toString(), new Object[]{spaceId}, new BeanPropertyRowMapper<>(UsuarioSpace.class));
 
 	        for (UsuarioSpace usuarioSpace : usuarioSpaces) {
-	            if (usuarioSpace.getStatus() == null) {
-	                usuarioSpace.setAutorizacao("pendente");
-	            } else {
-	                usuarioSpace.setAutorizacao(usuarioSpace.getStatus() ? "permitido" : "negado");
-	            }
+	        	String status = usuarioSpace.getStatus();
+
+	        	if (status == null || status.equals("null")) {
+	        	    usuarioSpace.setAutorizacao("pendente");
+	        	} else if (status.equals("true")) {
+	        	    usuarioSpace.setAutorizacao("permitido");
+	        	} else if (status.equals("false")) {
+	        	    usuarioSpace.setAutorizacao("negado");
+	        	} 
+
+
+
 	        }
 
 	        return usuarioSpaces;

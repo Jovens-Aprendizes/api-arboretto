@@ -7,11 +7,11 @@ public class UsuarioSpace {
 	private String spaceId;
 	private String dataMarcada;
 	private String observacao;
-	private Boolean status;
+	private String status;
 	private String autorizacao;
 	private String nomeUsuario;
 	private String nomeSpace;
-	private String totalReservas;
+	
 
 	public UsuarioSpace() {
 
@@ -57,11 +57,13 @@ public class UsuarioSpace {
 		this.observacao = observacao;
 	}
 
-	public Boolean getStatus() {
+	
+
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(Boolean status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -89,13 +91,7 @@ public class UsuarioSpace {
 		this.nomeSpace = nomeSpace;
 	}
 
-	public String getTotalReservas() {
-		return totalReservas;
-	}
-
-	public void setTotalReservas(String totalReservas) {
-		this.totalReservas = totalReservas;
-	}
+	
 
 	
 	
