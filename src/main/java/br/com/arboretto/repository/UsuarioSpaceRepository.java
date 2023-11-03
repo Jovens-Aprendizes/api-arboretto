@@ -22,6 +22,5 @@ public interface UsuarioSpaceRepository {
 	
 	public List<UsuarioSpace> listarSpacePorId(String spaceId);
 	
-	 public List<String> obterDiasMaisDemandadosComDiaDaSemana(int mes, int ano);
 
 }
