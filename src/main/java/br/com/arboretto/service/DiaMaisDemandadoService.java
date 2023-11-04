@@ -14,8 +14,8 @@ public class DiaMaisDemandadoService {
 	@Autowired
 	private DiaMaisDemandadoRepositoryJdbc diaMaisDemandadoRepositoryJdbc;
 	
-	public List<DiaMaisDemandado> obterDiasMaisDemandados(int mes, int ano,int limit) {
-        return diaMaisDemandadoRepositoryJdbc.obterDiasMaisDemandados(mes, ano,limit);
+	public List<DiaMaisDemandado> obterDiasMaisDemandados(int mes, int ano) {
+        return diaMaisDemandadoRepositoryJdbc.obterDiasMaisDemandados(mes, ano);
     }
 
 }
