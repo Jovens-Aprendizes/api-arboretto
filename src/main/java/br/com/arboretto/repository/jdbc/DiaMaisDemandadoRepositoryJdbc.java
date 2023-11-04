@@ -15,27 +15,28 @@ public class DiaMaisDemandadoRepositoryJdbc {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
-	public List<DiaMaisDemandado> obterDiasMaisDemandados(int mes, int ano,int limit) {
+	public List<DiaMaisDemandado> obterDiasMaisDemandados(int mes, int ano) {
 		try {
-			String query = "SELECT DAYOFWEEK(data_marcada) as dia_semana, " +
-		               "       COUNT(*) as totalReservas, " +
-		               "       GROUP_CONCAT(DATE_FORMAT(data_marcada, '%Y-%m-%d')) as datasMarcadas " +
-		               "FROM usuario_space " +
-		               "WHERE MONTH(data_marcada) = ? AND YEAR(data_marcada) = ? " +
-		               "GROUP BY dia_semana " +
-		               "ORDER BY COUNT(*) DESC " +
-		               "LIMIT ?";  
+			String query = "SELECT DAYOFWEEK(data_marcada) as dia_semana,\r\n"
+					+ "       COUNT(*) as totalReservas,\r\n"
+					+ "       data_marcada as datasMarcadas\r\n"
+					+ "FROM usuario_space\r\n"
+					+ "WHERE MONTH(data_marcada) = ? AND YEAR(data_marcada) = ?\r\n"
+					+ "GROUP BY dia_semana, datasMarcadas\r\n"
+					+ "ORDER BY dia_semana;\r\n";  
+  
 
 
-			List<DiaMaisDemandado> diasMaisDemandados = jdbcTemplate.query(query, new Object[] { mes, ano,limit },
-					(rs, rowNum) -> {
-						int diaDaSemana = rs.getInt("dia_semana");
-						String nomeDiaDaSemana = obterNomeDiaSemana(diaDaSemana);
-						int totalReservas = rs.getInt("totalReservas");
-						String datasMarcadas = rs.getString("datasMarcadas");
-						List<String> datasMarcadasList = Arrays.asList(datasMarcadas.split(","));
-						return new DiaMaisDemandado(nomeDiaDaSemana, totalReservas, datasMarcadasList);
-					});
+			List<DiaMaisDemandado> diasMaisDemandados = jdbcTemplate.query(query, new Object[] { mes, ano },
+				    (rs, rowNum) -> {
+				        int diaDaSemana = rs.getInt("dia_semana");
+				        String nomeDiaDaSemana = obterNomeDiaSemana(diaDaSemana);
+				        int totalReservas = rs.getInt("totalReservas");
+				        String datasMarcadas = rs.getString("datasMarcadas");
+				        List<String> datasMarcadasList = Arrays.asList(datasMarcadas.split(","));
+				        return new DiaMaisDemandado(nomeDiaDaSemana, totalReservas, datasMarcadasList);
+				    });
+
 
 			return diasMaisDemandados;
 		} catch (Exception e) {

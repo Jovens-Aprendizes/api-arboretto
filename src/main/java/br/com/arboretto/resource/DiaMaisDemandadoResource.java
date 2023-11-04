@@ -28,11 +28,11 @@ public class DiaMaisDemandadoResource {
 	@RequestMapping(value = "/listar-dias-demandados", method = RequestMethod.GET, produces = {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public ResponseEntity<?> listarDiasDemandados(@RequestHeader(required = false) String token,
-			@RequestParam(name = "mes") int mes, @RequestParam(name = "ano") int ano,@RequestParam(name = "limit") int limit) {
+			@RequestParam(name = "mes") int mes, @RequestParam(name = "ano") int ano) {
 
 		CacheControl cacheControl = CacheControl.maxAge(30, TimeUnit.SECONDS);
 		return ResponseEntity.status(HttpStatus.OK).cacheControl(cacheControl)
-				.body(diaMaisDemandadoService.obterDiasMaisDemandados(mes, ano,limit));
+				.body(diaMaisDemandadoService.obterDiasMaisDemandados(mes, ano));
 	}
 
 }
